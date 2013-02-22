@@ -88,5 +88,28 @@ module Birom
       end
 
     end
+
+    describe '#getVertices' do
+      context 'with valid coordinates' do
+        let(:t) do Birom.new([
+          {u: -1, v: 1, w: 1},
+          {u: -1, v: 1, w: 0},
+          {u: 0,  v: 1, w: 0},
+          {u: 0,  v: 0, w: 0},
+        ])
+        end
+
+        it 'returns creates Birom' do
+          t.getVertices.should be_matching_coordinates([
+            {:x=>1, :y=>0},
+            {:x=>0, :y=>1},
+            {:x=>0, :y=>0},
+            {:x=>1, :y=>-1},
+            {:x=>0, :y=>-1},
+            {:x=>-1, :y=>0}])
+        end
+      end
+
+    end
   end
 end
