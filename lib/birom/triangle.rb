@@ -1,4 +1,5 @@
 module Birom
+
   class Triangle
 
     attr_accessor :u
@@ -7,10 +8,10 @@ module Birom
     attr_accessor :type
     attr_accessor :playerId
 
-    TYPE_UNDEFINED = 0
-    PLAYER_UNDEFINED = 0
+    TRI_TYPE_UNDEFINED = 0
+    PLAYER_ID_UNDEFINED = 0
 
-    def initialize(u, v, w, type = TYPE_UNDEFINED, playerId = PLAYER_UNDEFINED)
+    def initialize(u, v, w, type = TRI_TYPE_UNDEFINED, playerId = PLAYER_ID_UNDEFINED)
       unless ([u, v, w].all? {|c| c.is_a? Integer }) then
         raise Exception.new('Invalid or missing coordinates')
       end
