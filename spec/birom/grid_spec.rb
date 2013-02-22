@@ -1,0 +1,160 @@
+require 'spec_helper'
+require 'birom/grid'
+require 'birom/triangle'
+
+module Birom
+  describe Grid do
+    describe '#initialize' do
+      it 'can be initialized' do
+        Grid.new.should be_an_instance_of(Grid)
+      end
+    end
+
+    describe '#set' do
+      let(:grid) { Grid.new }
+
+      context 'without triangle' do
+        it 'raises' do
+          expect{grid.set}.to raise_error
+        end
+      end
+
+      context 'with invalid triangle' do
+        it 'raises' do
+          expect{grid.set('foo')}.to raise_error
+        end
+      end
+
+      context 'with valid triangle' do
+        let(:triangle) { Triangle.new(0, 0, 0) }
+        it 'stores triangle' do
+          grid.set(triangle)
+          grid.triangles.count.should == 1
+        end
+      end
+    end
+
+    describe '#get' do
+      context 'with stored triangle' do
+        let(:triangle) { Triangle.new(0, 0, 0) }
+        let(:grid) do
+          g = Grid.new
+          g.set(triangle)
+          g
+        end
+
+        it 'stores triangle' do
+          grid.get(0, 0, 0).should be(triangle)
+        end
+      end
+    end
+
+    describe '#getNeighbours' do
+      context 'for triangle 0/0/0' do
+        let(:triangle) { Triangle.new(0, 0, 0) }
+
+        let(:grid) do
+          g = Grid.new
+          g.set(triangle)
+          g
+        end
+
+        context 'with only one stored triangle' do
+          it 'returns an empty array' do
+            grid.getNeighbours(triangle).should == []
+          end
+        end
+
+        context 'with 3 neighbours' do
+
+          let(:triangles) do 
+            [
+              Triangle.new(1, 0, 0),
+              Triangle.new(0, 1, 0),
+              Triangle.new(0, 0, 1),
+              Triangle.new(0, -1, 2),
+            ]
+          end
+
+          let(:grid) do
+            g = Grid.new
+            g.set(triangle)
+            triangles.each { |t| g.set(t) }
+            g
+          end
+
+          it 'returns 3 neighbours' do
+            grid.getNeighbours(triangle).should =~ triangles[0..2]
+          end
+        end
+      end
+    end
+
+    describe '#getCloseNeighbours' do
+      context 'for triangle 0/0/0' do
+        let(:triangle) { Triangle.new(0, 0, 0) }
+
+        let(:grid) do
+          g = Grid.new
+          g.set(triangle)
+          g
+        end
+
+        context 'with only one stored triangle' do
+          it 'returns an empty array' do
+            grid.getCloseNeighbours(triangle).should == []
+          end
+        end
+
+        context 'with 3 neighbours' do
+
+          let(:triangles) do 
+            [
+              Triangle.new(1, 0, 0),
+              Triangle.new(0, 1, 0),
+              Triangle.new(0, 0, 1),
+              Triangle.new(0, -1, 2),
+            ]
+          end
+
+          let(:grid) do
+            g = Grid.new
+            g.set(triangle)
+            triangles.each { |t| g.set(t) }
+            g
+          end
+
+          it 'returns 3 neighbours' do
+            grid.getCloseNeighbours(triangle).should =~ triangles[0..2]
+          end
+        end
+      end
+    end
+
+    describe '#getBoundingBox' do
+      let(:grid) { Grid.new }
+
+      context 'with empty grid' do
+        it 'returns 0/0/0, 0/0/0' do
+          grid.getBoundingBox.should == [
+            { u: 0, v: 0, w: 0 },
+            { u: 0, v: 0, w: 0 }
+          ]
+        end
+      end
+
+      context 'with 3 triangles' do
+        it 'returns A/B' do
+          grid.set Triangle.new(0, 0, 0)
+          grid.set Triangle.new(1, 0, 0)
+          grid.set Triangle.new(0, 1, 0)
+
+          grid.getBoundingBox.should == [
+            { u: 1, v: 1, w: -2 },
+            { u: 0, v: 0, w: 1 }
+          ]
+        end
+      end
+    end
+  end
+end
