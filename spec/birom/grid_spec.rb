@@ -67,7 +67,7 @@ module Birom
 
         context 'with 3 neighbours' do
 
-          let(:triangles) do 
+          let(:triangles) do
             [
               Triangle.new(1, 0, 0),
               Triangle.new(0, 1, 0),
@@ -108,7 +108,7 @@ module Birom
 
         context 'with 3 neighbours' do
 
-          let(:triangles) do 
+          let(:triangles) do
             [
               Triangle.new(1, 0, 0),
               Triangle.new(0, 1, 0),
