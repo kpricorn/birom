@@ -29,5 +29,11 @@ module Birom
         end
       end
     end
+
+    def self.isWithin(a, b, x)
+      ([a.u, b.u].min..[a.u, b.u].max).member?(x.u) and
+        ([a.v, b.v].min..[a.v, b.v].max).member?(x.v) and
+        ([a.w, b.w].min..[a.w, b.w].max).member?(x.w)
+    end
   end
 end
