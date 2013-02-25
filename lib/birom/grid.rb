@@ -4,6 +4,7 @@ require 'birom/triangle'
 module Birom
   class BorderReached < Exception; end
   class EndOfBranch < Exception; end
+  class SlotFound < Exception; end
 
   class Grid
 
@@ -165,7 +166,7 @@ module Birom
 
     def getCapturedTriangles(currentMove)
       unless currentMove.is_a? Array
-        raise Exception("Argument is not an array")
+        raise Exception.new("Argument is not an array")
       end
 
       # mark visited nodes
@@ -217,6 +218,73 @@ module Birom
       end
 
       return branches.flatten
+    end
+
+    def findSnappingSlots(move)
+      unless move.is_a? Array
+        raise Exception.new("Argument is not an array")
+      end
+
+      start = move.first
+      marked = []
+      slot = []
+      neighbourProjections = [
+        { u: -1, v:  1, w:  0 },
+        { u:  1, v:  0, w: -1 },
+        { u:  0, v: -1, w:  1 },
+        { u:  1, v: -1, w:  0 },
+        { u:  1, v:  0, w: -1 },
+        { u:  0, v:  1, w: -1 },
+      ]
+
+      # note: internal calculation done with Triangle, not hash
+      begin
+        Common.bfs start do |node|
+          marked << node
+
+          testSlotProjection = Triangle.new(
+            node.u - start.u, node.v - start.v, node.w - start.w
+          )
+
+          moveProjection = move.map do |t|
+            Triangle.new(
+              t.u + testSlotProjection.u,
+              t.v + testSlotProjection.v,
+              t.w + testSlotProjection.w,
+            )
+          end
+
+          slotTest = moveProjection.map do |t|
+            get(t.u, t.v, t.w).nil?
+          end
+
+          if slotTest.all?
+            slot = moveProjection
+            raise SlotFound.new
+          end
+
+          neighbours = neighbourProjections.map do |p|
+            Triangle.new(
+              node.u + p[:u],
+              node.v + p[:v],
+              node.w + p[:w]
+            )
+          end
+
+          neighbours.reject do |nb|
+            marked.include? nb
+          end
+        end
+      rescue SlotFound
+      end
+      # convert back to u/v/w hash
+      slot.map do |t|
+        {
+          u: t.u,
+          v: t.v,
+          w: t.w
+        }
+      end
     end
 
     private

@@ -518,5 +518,47 @@ module Birom
         end
       end
     end
+
+    describe '#findSnappingSlots' do
+      context 'on an empty grid' do
+        let(:grid) { Grid.new }
+
+        it 'returns the same move coordinates' do
+          t = Triangle.new(0, 0, 0, Triangle::TRI_TYPE_COUNTER, 99)
+          grid.findSnappingSlots([t]).should be_matching_coordinates([
+            {u: 0, v: 0, w: 0}])
+        end
+
+        it 'returns the same move coordinates' do
+          t = Triangle.new(1, -1, 0, Triangle::TRI_TYPE_COUNTER, 99)
+          grid.findSnappingSlots([t]).should be_matching_coordinates(
+            [{u: 1, v: -1, w: 0}])
+        end
+      end
+
+      context 'when move overlaps' do
+
+        let(:triangle) do
+          Triangle.new(6, 0, -5, Triangle::TRI_TYPE_COUNTER)
+        end
+
+        let(:grid) do
+          g = Grid.new
+          g.set triangle
+          g
+        end
+
+        it 'returns a vacant neighbour coordinate candidate' do
+          [
+            {u: 5, v:  1, w: -5},
+            {u: 5, v:  0, w: -4},
+            {u: 6, v: -1, w: -4},
+            {u: 7, v: -1, w: -5},
+            {u: 7, v:  0, w: -6},
+            {u: 6, v:  1, w: -6},
+          ].should include(grid.findSnappingSlots([triangle])[0])
+        end
+      end
+    end
   end
 end
