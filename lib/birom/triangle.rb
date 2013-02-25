@@ -8,7 +8,13 @@ module Birom
     attr_accessor :type
     attr_accessor :playerId
 
-    TRI_TYPE_UNDEFINED = 0
+    TRI_TYPE_UNDEFINED = -1
+    TRI_TYPE_START = 0
+    TRI_TYPE_COMMON = 1
+    TRI_TYPE_POINT = 2
+    TRI_TYPE_COUNTER = 3
+    TRI_TYPE_BORDER = 4
+
     PLAYER_ID_UNDEFINED = 0
 
     def initialize(u, v, w, type = TRI_TYPE_UNDEFINED, playerId = PLAYER_ID_UNDEFINED)
