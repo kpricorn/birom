@@ -2,6 +2,8 @@ require 'birom/common'
 require 'birom/triangle'
 
 module Birom
+  class BorderReached < Exception; end
+
   class Grid
 
     attr_accessor :triangles
@@ -127,6 +129,37 @@ module Birom
         neighbours
       end
       pointTriangles
+    end
+
+    def isEncircledBy(redBiromTriangle, playerId)
+      marked = []
+      unless redBiromTriangle.type == Triangle::TRI_TYPE_START
+        raise Exception.new("Argument is not a red birom triangle")
+      end
+      encircled = true
+
+      begin
+        Common.bfs redBiromTriangle do |t|
+          neighbours = []
+          getCloseNeighbours(t).each do |c|
+            if c.type == Triangle::TRI_TYPE_BORDER
+              raise BorderReached.new
+            end
+            if c.type == Triangle::TRI_TYPE_START or
+              (
+                c.type == Triangle::TRI_TYPE_COUNTER and
+                c.playerId.to_i != playerId.to_i
+              )and not marked.include? c
+              neighbours << c
+            end
+            marked << c
+          end
+          neighbours
+        end
+      rescue BorderReached
+        encircled = false
+      end
+      encircled
     end
   end
 end

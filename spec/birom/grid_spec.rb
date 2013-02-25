@@ -266,5 +266,80 @@ module Birom
         end
       end
     end
+
+    describe '#isEncircledBy' do
+
+      let(:red) { Triangle.new 0, 0, 0, Triangle::TRI_TYPE_START }
+
+      context 'when red birom is surrounded by 99' do
+        let(:grid) do
+          g = Grid.new
+          g.set red
+          g.set Triangle.new 1, 0, 0, Triangle::TRI_TYPE_COUNTER, 99
+          g.set Triangle.new 0, 1, 0, Triangle::TRI_TYPE_COUNTER, 99
+          g.set Triangle.new 0, 0, 1, Triangle::TRI_TYPE_COUNTER, 99
+          g.fillBorderTriangles()
+          g
+        end
+
+        it 'returns false for 11' do
+          grid.isEncircledBy(red, 11).should be_false
+        end
+
+        it 'returns true for 99' do
+          grid.isEncircledBy(red, 99).should be_true
+        end
+      end
+
+      context 'when red birom is not surrounded' do
+        let(:grid) do
+          g = Grid.new
+          g.set red
+          g.set Triangle.new 0, 1, 0, Triangle::TRI_TYPE_COUNTER, 11
+          g.set Triangle.new 0, 0, 1, Triangle::TRI_TYPE_COUNTER, 99
+          g.fillBorderTriangles()
+          g
+        end
+
+        it 'returns false for 11' do
+          grid.isEncircledBy(red, 11).should be_false
+        end
+
+        it 'returns false for 99' do
+          grid.isEncircledBy(red, 99).should be_false
+        end
+      end
+
+      context 'when red birom is surrounded by both players' do
+        let(:red) { Triangle.new 6, -1, -5, Triangle::TRI_TYPE_START }
+        let(:grid) do
+          g = Grid.new
+          g.set red
+
+          g.set Triangle.new(7, -1, -6, Triangle::TRI_TYPE_COUNTER, 99)
+          g.set Triangle.new(7, -2, -5, Triangle::TRI_TYPE_COUNTER, 11)
+          g.set Triangle.new(7, -1, -5, Triangle::TRI_TYPE_POINT, 11)
+
+          g.set Triangle.new(5, 0, -5, Triangle::TRI_TYPE_COUNTER, 99)
+          g.set Triangle.new(6, 0, -6, Triangle::TRI_TYPE_COUNTER, 11)
+          g.set Triangle.new(6, 0, -5, Triangle::TRI_TYPE_POINT, 11)
+
+          g.set Triangle.new(5, -1, -4, Triangle::TRI_TYPE_COUNTER, 99)
+          g.set Triangle.new(6, -2, -4, Triangle::TRI_TYPE_COUNTER, 11)
+          g.set Triangle.new(6, -1, -4, Triangle::TRI_TYPE_POINT, 11)
+
+          g.fillBorderTriangles()
+          g
+        end
+
+        it 'returns true for 11' do
+          grid.isEncircledBy(red, 11).should be_true
+        end
+
+        it 'returns true for 99' do
+          grid.isEncircledBy(red, 99).should be_true
+        end
+      end
+    end
   end
 end
