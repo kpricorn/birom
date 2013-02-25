@@ -1,3 +1,5 @@
+require 'birom/common'
+
 module Birom
   class Grid
 
@@ -60,6 +62,36 @@ module Birom
         copy[key] = Triangle.new(t.u, t.v, t.w, t.type, t.playerId)
       end
       Grid.new(copy)
+    end
+
+    def fillBorderTriangles
+      a, o = getBoundingBox
+      ta = Triangle.new(a[:u] + 1, a[:v] + 1, a[:w] - 2, Triangle::TRI_TYPE_BORDER)
+      to = Triangle.new(o[:u] - 1, o[:v] - 1, o[:w] + 2, Triangle::TRI_TYPE_BORDER)
+      # two callbacks mark and neighbours
+      # mark start coordinate as visited
+      set ta
+      Common.bfs ta do |t|
+        # find neighbours of t
+        # include:
+        # - coordinates within bounding box
+        # - vacant coordinates
+        # return valid triangles (type: border)
+        neighbours = []
+        t.getCloseNeighbourCoords.each do |neighbour|
+          tn = Triangle.new(neighbour[:u],
+                           neighbour[:v],
+                           neighbour[:w],
+                           Triangle::TRI_TYPE_BORDER)
+          if Common::isWithin(ta, to, tn) and
+            get(neighbour[:u], neighbour[:v], neighbour[:w]).nil? then
+            # mark as visited (adding to the grid)
+            set tn
+            neighbours << tn
+          end
+        end
+        neighbours
+      end
     end
   end
 end

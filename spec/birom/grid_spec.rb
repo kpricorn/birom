@@ -172,5 +172,61 @@ module Birom
         end
       end
     end
+
+    describe '#fillBorderTriangles' do
+      context 'with single birom' do
+        let(:grid) do
+          g = Grid.new()
+          # fill grid with red birom
+          g.set Triangle.new(0, 0, 0, nil, Triangle::TRI_TYPE_START)
+          g.set Triangle.new(0, 1, 0, nil, Triangle::TRI_TYPE_START)
+          g.set Triangle.new(-1, 1, 0, nil, Triangle::TRI_TYPE_START)
+          g.set Triangle.new(-1, 1, 1, nil, Triangle::TRI_TYPE_START)
+          g
+        end
+
+        let(:expected) do
+          [
+            Triangle.new(0, 0, 0),
+            Triangle.new(0, 1, 0),
+            Triangle.new(-1, 1, 0),
+            Triangle.new(-1, 1, 1),
+            Triangle.new(1, 2, -3),
+            Triangle.new(1, 2, -2),
+            Triangle.new(0, 2, -2),
+            Triangle.new(1, 1, -2),
+            Triangle.new(0, 2, -1),
+            Triangle.new(1, 1, -1),
+            Triangle.new(-1, 2, -1),
+            Triangle.new(0, 1, -1),
+            Triangle.new(1, 0, -1),
+            Triangle.new(-1, 2, 0),
+            Triangle.new(1, 0, 0),
+            Triangle.new(-2, 2, 0),
+            Triangle.new(1, -1, 0),
+            Triangle.new(-2, 2, 1),
+            Triangle.new(1, -1, 1),
+            Triangle.new(-2, 1, 1),
+            Triangle.new(0, -1, 1),
+            Triangle.new(-2, 1, 2),
+            Triangle.new(0, 0, 1),
+            Triangle.new(0, -1, 2),
+            Triangle.new(-2, 0, 2),
+            Triangle.new(-1, 0, 1),
+            Triangle.new(-1, -1, 2),
+            Triangle.new(-1, 0, 2),
+            Triangle.new(-2, 0, 3),
+            Triangle.new(-1, -1, 3),
+            Triangle.new(-2, -1, 3),
+            Triangle.new(-2, -1, 4)
+          ]
+        end
+
+        it 'fills empty space with border triangles' do
+          grid.fillBorderTriangles
+          grid.triangles.values.should be_matching_coordinates(expected)
+        end
+      end
+    end
   end
 end
