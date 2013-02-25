@@ -85,5 +85,17 @@ module Birom
         ]
       end
     end
+
+    def ==(t2)
+      [ @u, @v, @w ]  == [ t2.u, t2.v, t2.w ]
+    end
+
+    def eql?(other)
+       other.kind_of?(self.class) && to_s == other.to_s
+    end
+
+    def hash
+        to_s.hash
+    end
   end
 end
