@@ -341,5 +341,182 @@ module Birom
         end
       end
     end
+
+    describe '#getCapturedTriangles' do
+
+      context 'with 1 surrounded triangle' do
+        let (:root) do
+          Triangle.new(0, 0, 1, Triangle::TRI_TYPE_COUNTER, 99)
+        end
+
+        let(:grid) do
+          g = Grid.new
+
+          g.set Triangle.new(0, 0, 0, Triangle::TRI_TYPE_COUNTER, 11)
+          g.set Triangle.new(1, 0, 0, Triangle::TRI_TYPE_COUNTER, 99)
+          g.set Triangle.new(0, 1, 0, Triangle::TRI_TYPE_COUNTER, 99)
+          g.set root
+
+          g.fillBorderTriangles
+          g
+        end
+
+        it 'returns 0/0/0 as captured triangle' do
+          capturedTriangles = grid.getCapturedTriangles(
+            [Triangle.new(0, 0, 1, Triangle::TRI_TYPE_COUNTER, 99)])
+          capturedTriangles.should be_matching_coordinates(
+            [ Triangle.new(0, 0, 0) ]
+          )
+        end
+      end
+
+      context 'with 4 surrounded triangles' do
+        let(:root) do
+          # current move player 9
+          Triangle.new(-2, 5, -3, Triangle::TRI_TYPE_COUNTER, 9)
+        end
+
+        let(:grid) do
+          g = Grid.new
+
+          # player 9
+          g.set Triangle.new(-3, 7, -3, Triangle::TRI_TYPE_COUNTER, 9)
+          g.set Triangle.new(-3, 6, -2, Triangle::TRI_TYPE_COUNTER, 9)
+          g.set Triangle.new(-3, 5, -1, Triangle::TRI_TYPE_COUNTER, 9)
+          g.set Triangle.new(-2, 6, -4, Triangle::TRI_TYPE_COUNTER, 9)
+          g.set Triangle.new(-2, 4, -2, Triangle::TRI_TYPE_COUNTER, 9)
+          # player 6
+          g.set Triangle.new(-3, 6, -3, Triangle::TRI_TYPE_COUNTER, 6)
+          g.set Triangle.new(-2, 6, -3, Triangle::TRI_TYPE_COUNTER, 6)
+          g.set Triangle.new(-3, 5, -2, Triangle::TRI_TYPE_COUNTER, 6)
+          g.set Triangle.new(-2, 5, -2, Triangle::TRI_TYPE_COUNTER, 6)
+          g.set root
+
+          g.fillBorderTriangles
+          g
+        end
+
+        it 'returns 4 captured triangles' do
+          capturedTriangles = grid.getCapturedTriangles([root])
+          capturedTriangles.should be_matching_coordinates(
+            [
+              Triangle.new(-3, 6, -3),
+              Triangle.new(-2, 6, -3),
+              Triangle.new(-3, 5, -2),
+              Triangle.new(-2, 5, -2),
+            ]
+          )
+        end
+      end
+
+      context 'with 4 surrounded triangles' do
+
+        let(:root) do
+          # current move player 9
+          Triangle.new(-2, 5, -3, Triangle::TRI_TYPE_COUNTER, 9)
+        end
+
+        let(:grid) do
+          g = Grid.new
+
+          # player 9
+          g.set Triangle.new(-3, 7, -3, Triangle::TRI_TYPE_COUNTER, 9)
+          g.set Triangle.new(-3, 6, -2, Triangle::TRI_TYPE_COUNTER, 9)
+          g.set Triangle.new(-3, 5, -1, Triangle::TRI_TYPE_COUNTER, 9)
+          g.set Triangle.new(-2, 6, -4, Triangle::TRI_TYPE_COUNTER, 9)
+          g.set Triangle.new(-2, 4, -2, Triangle::TRI_TYPE_COUNTER, 9)
+          # player 6
+          g.set Triangle.new(-3, 6, -3, Triangle::TRI_TYPE_COUNTER, 6)
+          g.set Triangle.new(-2, 6, -3, Triangle::TRI_TYPE_COUNTER, 6)
+          g.set Triangle.new(-3, 5, -2, Triangle::TRI_TYPE_COUNTER, 6)
+
+          # now point for 9
+          g.set Triangle.new(-2, 5, -2, Triangle::TRI_TYPE_POINT, 9)
+
+          g.set root
+
+          g.fillBorderTriangles
+          g
+        end
+
+        it 'returns 3 captured triangles' do
+          capturedTriangles = grid.getCapturedTriangles([root])
+          capturedTriangles.should be_matching_coordinates(
+            [
+              Triangle.new(-3, 6, -3),
+              Triangle.new(-2, 6, -3),
+              Triangle.new(-3, 5, -2),
+            ]
+          )
+        end
+      end
+
+      context 'with 2 surrounded triangles' do
+
+        let(:root) do
+          # current move player 9
+          Triangle.new(-2, 5, -3, Triangle::TRI_TYPE_COUNTER, 9)
+        end
+
+        let(:grid) do
+          g = Grid.new
+
+          # player 9
+          g.set Triangle.new(-3, 7, -3, Triangle::TRI_TYPE_COUNTER, 9)
+          g.set Triangle.new(-3, 6, -2, Triangle::TRI_TYPE_COUNTER, 9)
+          g.set Triangle.new(-3, 5, -1, Triangle::TRI_TYPE_COUNTER, 9)
+          g.set Triangle.new(-2, 6, -4, Triangle::TRI_TYPE_COUNTER, 9)
+
+          # player 6
+          # now counter player 6
+          g.set Triangle.new(-2, 4, -2, Triangle::TRI_TYPE_COUNTER, 6)
+
+          g.set Triangle.new(-3, 6, -3, Triangle::TRI_TYPE_COUNTER, 6)
+          g.set Triangle.new(-2, 6, -3, Triangle::TRI_TYPE_COUNTER, 6)
+          g.set Triangle.new(-3, 5, -2, Triangle::TRI_TYPE_COUNTER, 6)
+          g.set Triangle.new(-2, 5, -2, Triangle::TRI_TYPE_COUNTER, 9)
+
+          g.set root
+
+          g.fillBorderTriangles
+          g
+        end
+
+        it 'returns 2 captured triangles' do
+          capturedTriangles = grid.getCapturedTriangles([root])
+          capturedTriangles.should be_matching_coordinates(
+            [
+              Triangle.new(-3, 6, -3),
+              Triangle.new(-2, 6, -3),
+            ]
+          )
+        end
+      end
+
+      context 'without encirclement' do
+
+        let(:root) do
+          Triangle.new(0, 0, 1, Triangle::TRI_TYPE_COUNTER, 99)
+        end
+
+        let(:grid) do
+          g = Grid.new
+
+          # player 9
+          g.set Triangle.new(0, 0, 0, Triangle::TRI_TYPE_COUNTER, 11)
+          g.set Triangle.new(1, 0, 0, Triangle::TRI_TYPE_COUNTER, 11)
+          g.set Triangle.new(0, 1, 0, Triangle::TRI_TYPE_COUNTER, 99)
+          g.set root
+
+          g.fillBorderTriangles
+          g
+        end
+
+        it 'returns empty array' do
+          capturedTriangles = grid.getCapturedTriangles([root])
+          capturedTriangles.should == []
+        end
+      end
+    end
   end
 end

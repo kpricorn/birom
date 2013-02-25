@@ -3,6 +3,7 @@ require 'birom/triangle'
 
 module Birom
   class BorderReached < Exception; end
+  class EndOfBranch < Exception; end
 
   class Grid
 
@@ -37,7 +38,7 @@ module Birom
 
     # o: triangle   +---∆-----B
     #              /   ∆∆∆   /
-    #             ∆∆∆∆∆∆    /
+    #             ∆∆∆∆∆∆    / # look mom, alt-j's on stage ;)
     #            /    ∆∆∆∆∆∆
     #           A------∆--+
     # returns the coordinates [ A, B ]
@@ -160,6 +161,91 @@ module Birom
         encircled = false
       end
       encircled
+    end
+
+    def getCapturedTriangles(currentMove)
+      unless currentMove.is_a? Array
+        raise Exception("Argument is not an array")
+      end
+
+      # mark visited nodes
+      marked = []
+
+      # outer bfs:
+      # Walk from current move along newly won point stones until a triangle
+      # of type POINT
+      # inner bfs:
+      # From there a nested bfs is started to determine
+      # if the chain is fully encircled and therefore captured.
+      #
+      # start walk with arbitrary triangle of currentMove
+      root = currentMove.first
+      branches = []
+
+      Common.bfs root do |t|
+        # find neighbours (ENB) of t including:
+        # - currentMove
+        # - point triangles with same playerId
+        cNbs = getCloseNeighbours(t)
+        nbs = []
+        cNbs.each do |c|
+          if (
+            (
+              c.type == Triangle::TRI_TYPE_POINT and
+              c.playerId == root.playerId
+            ) or currentMove.include? c
+          ) and not marked.include? c
+            # mark as visited
+            marked << c
+            nbs << c
+          end
+        end
+
+        # start inner bfs
+        branchNodes = cNbs.select do |c|
+          c.type == Triangle::TRI_TYPE_COUNTER and not marked.include? c
+        end
+
+        branchNodes.each do |branchRoot|
+          # mark as visited
+          marked << branchRoot
+          branches << getCapturedBranch(branchRoot)
+        end
+
+        ## end inner bfs
+        nbs
+      end
+
+      return branches.flatten
+    end
+
+    private
+    def getCapturedBranch(branchRoot)
+      marked = [branchRoot]
+      branch = []
+      begin
+        Common.bfs branchRoot do |t|
+          branch << t
+          nbs = getCloseNeighbours(t)
+          validNbs = []
+          nbs.each do |c|
+            if c.type == Triangle::TRI_TYPE_BORDER
+              raise EndOfBranch.new
+            end
+            if (
+              c.type == Triangle::TRI_TYPE_COUNTER and
+              c.playerId == t.playerId
+            ) and not marked.include? c
+              validNbs << c
+              marked << c
+            end
+          end
+          validNbs
+        end
+      rescue EndOfBranch
+        branch = []
+      end
+      branch
     end
   end
 end
