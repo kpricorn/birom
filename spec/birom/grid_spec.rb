@@ -227,6 +227,44 @@ module Birom
           grid.triangles.values.should be_matching_coordinates(expected)
         end
       end
+
+      context '0/0/0 with 3 orbiting counters' do
+        let(:grid) do
+          g = Grid.new
+          g.set Triangle.new(1, 0, 0, Triangle::TRI_TYPE_COUNTER)
+          g.set Triangle.new(0, 1, 0, Triangle::TRI_TYPE_COUNTER)
+          g.set Triangle.new(0, 0, 1, Triangle::TRI_TYPE_COUNTER)
+          g.fillBorderTriangles
+          g
+        end
+
+        it 'keeps 0/0/0 empty after flooding' do
+          grid.get(0, 0, 0).should be_nil
+        end
+      end
+    end
+
+    describe '#getPointTriangles' do
+      context '0/0/0 with 3 orbiting counters' do
+        let (:t3) do
+          Triangle.new(0, 0, 1, Triangle::TRI_TYPE_COUNTER, 99)
+        end
+
+        let(:points) do
+          g = Grid.new
+          g.set Triangle.new(1, 0, 0, Triangle::TRI_TYPE_COUNTER, 99)
+          g.set Triangle.new(0, 1, 0, Triangle::TRI_TYPE_COUNTER, 99)
+          g.set t3
+          g.fillBorderTriangles
+          g.getPointTriangles([t3])
+        end
+
+        it 'returns 0/0/0 as point triangle' do
+          points.should == [Triangle.new(0, 0, 0)]
+          points[0].playerId.should == 99
+          points[0].type.should == Triangle::TRI_TYPE_POINT
+        end
+      end
     end
   end
 end

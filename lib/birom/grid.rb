@@ -1,4 +1,5 @@
 require 'birom/common'
+require 'birom/triangle'
 
 module Birom
   class Grid
@@ -92,6 +93,40 @@ module Birom
         end
         neighbours
       end
+    end
+
+    def getPointTriangles(currentMove)
+      unless currentMove.is_a? Array
+        raise Exception.new("Argument is not an array")
+      end
+      # mark visited nodes
+      marked = []
+      pointTriangles = []
+      # start walk with arbitrary triangle of currentMove
+      root = currentMove.first
+      Common.bfs root do |t|
+        # find neighbours (ENB) of t including:
+        # - vacant coordinates (undefined on grid)
+        # - currentMove
+        nbCoords = t.getCloseNeighbourCoords.select do |c|
+          (
+            get(c[:u], c[:v], c[:w]).nil? or currentMove.include? c
+          ) and not marked.include? c
+        end
+        # return valid triangles (type: border)
+        neighbours = nbCoords.map do |c|
+          marked << c
+          nb = get(c[:u], c[:v], c[:w])
+          if nb.nil?
+            nb = Triangle.new(c[:u], c[:v], c[:w],
+                              Triangle::TRI_TYPE_POINT, root.playerId)
+            pointTriangles << nb
+          end
+          nb
+        end
+        neighbours
+      end
+      pointTriangles
     end
   end
 end
