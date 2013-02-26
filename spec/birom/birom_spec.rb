@@ -41,7 +41,7 @@ module Birom
         end
 
         it 'raises' do
-          expect{Birom.new(coordinates)}.to raise_error
+          expect{Birom.new(coordinates)}.to raise_error(/Not a birom/)
         end
       end
 
@@ -55,7 +55,7 @@ module Birom
         end
 
         it 'raises' do
-          expect{Birom.new(coordinates)}.to raise_error
+          expect{Birom.new(coordinates)}.to raise_error(/Not a birom/)
         end
       end
 
@@ -69,7 +69,7 @@ module Birom
         end
 
         it 'raises' do
-          expect{Birom.new(coordinates)}.to raise_error
+          expect{Birom.new(coordinates)}.to raise_error(/Not a birom/)
         end
       end
 
@@ -83,7 +83,25 @@ module Birom
         end
 
         it 'raises' do
-          expect{Birom.new(coordinates)}.to raise_error
+          expect{Birom.new(coordinates)}.to raise_error(/Not a birom/)
+        end
+      end
+
+      context 'with invalid arguments' do
+        it 'raises' do
+          expect{Birom.new(nil)}.to raise_error(/Coordinates is not an array/)
+        end
+      end
+
+      context 'when number of coordinates does not match' do
+        let(:coordinates) do [
+          {u: 1, v: -3, w: 2},
+          {u: 1, v: -3, w: 2},
+        ]
+        end
+
+        it 'raises' do
+          expect{Birom.new(coordinates)}.to raise_error(/Number of coordinates does not match/)
         end
       end
 

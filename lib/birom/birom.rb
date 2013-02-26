@@ -15,11 +15,11 @@ module Birom
       @type = type
 
       unless coordinates.is_a? Array then
-        raise Exception('Coordinates is not an array')
+        raise Exception.new('Coordinates is not an array')
       end
 
       if coordinates.length != 4 then
-        raise Exception('Number of coordinates does not match')
+        raise Exception.new('Number of coordinates does not match')
       end
 
       @triangles = coordinates.map do |c|
@@ -27,7 +27,7 @@ module Birom
       end
 
       unless valid?
-        raise Exception('Not a birom')
+        raise Exception.new('Not a birom')
       end
     end
 
