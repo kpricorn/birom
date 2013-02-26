@@ -1,7 +1,10 @@
 require 'birom/triangle'
+require 'birom/move'
 
 module Birom
   class Birom
+
+    include Move
 
     PLAYER_ID_UNDEFINED = 0
     TRI_TYPE_COUNTER = 0
@@ -50,16 +53,5 @@ module Birom
       end
     end
 
-    def getVertices
-      vertices = []
-      @triangles.each do |t|
-        t.getVertices.each do |v|
-          unless vertices.any? { |_v| v[:x] == _v[:x] and v[:y] == _v[:y] } then
-            vertices << v
-          end
-        end
-      end
-      vertices
-    end
   end
 end
