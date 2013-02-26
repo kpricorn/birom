@@ -87,7 +87,13 @@ module Birom
     end
 
     def ==(t2)
-      [ @u, @v, @w ]  == [ t2.u, t2.v, t2.w ]
+      if t2.is_a? Triangle
+        [ @u, @v, @w ]  == [ t2.u, t2.v, t2.w ]
+      elsif t2.is_a? Hash
+        [ @u, @v, @w ]  == [ t2[:u], t2[:v], t2[:w] ]
+      else
+        false
+      end
     end
 
     def eql?(other)
