@@ -1,10 +1,11 @@
 require 'birom/triangle'
-require 'birom/move'
+require 'birom/counter'
 
 module Birom
+
   class Birom
 
-    include Move
+    include Counter
 
     PLAYER_ID_UNDEFINED = 0
     TRI_TYPE_COUNTER = 0

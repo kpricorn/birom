@@ -1,21 +1,21 @@
 require 'spec_helper'
 
-require 'birom/move'
+require 'birom/counter'
 require 'birom/triangle'
 
 module Birom
 
-  class DummyMove
-    include Move
+  class DummyCounter
+    include Counter
     attr_accessor :triangles
   end
 
-  describe Move do
+  describe Counter do
 
     describe '#getVertices' do
       context 'with a single triangle' do
-        let(:move) do
-          m = DummyMove.new
+        let(:counter) do
+          m = DummyCounter.new
           m.triangles = [
             Triangle.new(-1, 1, 1),
           ]
@@ -23,7 +23,7 @@ module Birom
         end
 
         it 'returns x/y coordinates of vertices' do
-          move.getVertices.should be_matching_coordinates([
+          counter.getVertices.should be_matching_coordinates([
             {:x=>1, :y=>0},
             {:x=>0, :y=>1},
             {:x=>0, :y=>0},
@@ -31,9 +31,9 @@ module Birom
         end
       end
 
-      context 'with a move' do
-        let(:move) do
-          m = DummyMove.new
+      context 'with a counter' do
+        let(:counter) do
+          m = DummyCounter.new
           m.triangles = [
             Triangle.new(-1, 1, 1),
             Triangle.new(-1, 1, 0),
@@ -44,7 +44,7 @@ module Birom
         end
 
         it 'returns x/y coordinates of vertices' do
-          move.getVertices.should be_matching_coordinates([
+          counter.getVertices.should be_matching_coordinates([
             {:x=>1, :y=>0},
             {:x=>0, :y=>1},
             {:x=>0, :y=>0},
@@ -56,8 +56,8 @@ module Birom
     end
 
     describe '#connected?' do
-      let(:move) do
-        m = DummyMove.new
+      let(:counter) do
+        m = DummyCounter.new
         m.triangles = [
           Triangle.new(-1, 1, 1),
           Triangle.new(-1, 1, 0),
@@ -75,7 +75,7 @@ module Birom
         end
 
         it 'returns true' do
-          move.connected?(neighbours).should be_true
+          counter.connected?(neighbours).should be_true
         end
       end
 
@@ -87,13 +87,13 @@ module Birom
         end
 
         it 'returns false' do
-          move.connected?(neighbours).should be_false
+          counter.connected?(neighbours).should be_false
         end
       end
 
       context 'with 0 overlapping vertex' do
         it 'returns false' do
-          move.connected?([]).should be_false
+          counter.connected?([]).should be_false
         end
       end
     end

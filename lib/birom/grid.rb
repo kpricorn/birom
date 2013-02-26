@@ -1,13 +1,13 @@
 require 'birom/common'
 require 'birom/triangle'
-require 'birom/move'
+require 'birom/counter'
 
 module Birom
   class BorderReached < Exception; end
   class EndOfBranch < Exception; end
   class SlotFound < Exception; end
-  class MoveOverlaps < Exception; end
-  class MoveNotConnected < Exception; end
+  class CounterOverlaps < Exception; end
+  class CounterNotConnected < Exception; end
 
   class Grid
 
@@ -92,22 +92,22 @@ module Birom
       end
     end
 
-    def getPointTriangles(currentMove)
-      unless currentMove.is_a? Array
+    def getPointTriangles(currentCounter)
+      unless currentCounter.is_a? Array
         raise Exception.new("Argument is not an array")
       end
       # mark visited nodes
       marked = []
       pointTriangles = []
-      # start walk with arbitrary triangle of currentMove
-      root = currentMove.first
+      # start walk with arbitrary triangle of currentCounter
+      root = currentCounter.first
       Common.bfs root do |t|
         # find neighbours (ENB) of t including:
         # - vacant coordinates (undefined on grid)
-        # - currentMove
+        # - currentCounter
         nbCoords = t.getCloseNeighbourCoords.select do |c|
           (
-            get(c[:u], c[:v], c[:w]).nil? or currentMove.include? c
+            get(c[:u], c[:v], c[:w]).nil? or currentCounter.include? c
           ) and not marked.include? c
         end
         # return valid triangles (type: border)
@@ -157,8 +157,8 @@ module Birom
       encircled
     end
 
-    def getCapturedTriangles(currentMove)
-      unless currentMove.is_a? Array
+    def getCapturedTriangles(currentCounter)
+      unless currentCounter.is_a? Array
         raise Exception.new("Argument is not an array")
       end
 
@@ -166,19 +166,19 @@ module Birom
       marked = []
 
       # outer bfs:
-      # Walk from current move along newly won point stones until a triangle
+      # Walk from current Counter along newly won point stones until a triangle
       # of type POINT
       # inner bfs:
       # From there a nested bfs is started to determine
       # if the chain is fully encircled and therefore captured.
       #
-      # start walk with arbitrary triangle of currentMove
-      root = currentMove.first
+      # start walk with arbitrary triangle of currentCounter
+      root = currentCounter.first
       branches = []
 
       Common.bfs root do |t|
         # find neighbours (ENB) of t including:
-        # - currentMove
+        # - currentCounter
         # - point triangles with same playerId
         cNbs = getCloseNeighbours(t)
         nbs = []
@@ -187,7 +187,7 @@ module Birom
             (
               c.type == Triangle::TRI_TYPE_POINT and
               c.playerId == root.playerId
-            ) or currentMove.include? c
+            ) or currentCounter.include? c
           ) and not marked.include? c
             # mark as visited
             marked << c
@@ -213,12 +213,12 @@ module Birom
       return branches.flatten
     end
 
-    def findSnappingSlots(move)
-      unless move.is_a? Array
+    def findSnappingSlots(counter)
+      unless counter.is_a? Array
         raise Exception.new("Argument is not an array")
       end
 
-      start = move.first
+      start = counter.first
       marked = []
       slot = []
       neighbourProjections = [
@@ -239,7 +239,7 @@ module Birom
             node.u - start.u, node.v - start.v, node.w - start.w
           )
 
-          moveProjection = move.map do |t|
+          counterProjection = counter.map do |t|
             Triangle.new(
               t.u + testSlotProjection.u,
               t.v + testSlotProjection.v,
@@ -247,12 +247,12 @@ module Birom
             )
           end
 
-          slotTest = moveProjection.map do |t|
+          slotTest = counterProjection.map do |t|
             get(t.u, t.v, t.w).nil?
           end
 
           if slotTest.all?
-            slot = moveProjection
+            slot = counterProjection
             raise SlotFound.new
           end
 
@@ -280,21 +280,21 @@ module Birom
       end
     end
 
-    def validate!(move)
-      unless move.is_a? Move
-        raise Exception.new("Argument is not an Move")
+    def validate!(counter)
+      unless counter.is_a? Counter
+        raise Exception.new("Argument is not an counter")
       end
 
-      if overlaps? move.triangles
-        raise MoveOverlaps.new
+      if overlaps? counter.triangles
+        raise CounterOverlaps.new
       end
 
-      biromNeighbours = move.triangles.map do |t|
+      biromNeighbours = counter.triangles.map do |t|
         getNeighbours(t)
       end.flatten
 
-      unless move.connected? biromNeighbours
-        raise MoveNotConnected.new
+      unless counter.connected? biromNeighbours
+        raise CounterNotConnected.new
       end
 
       true

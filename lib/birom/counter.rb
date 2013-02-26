@@ -1,5 +1,5 @@
 module Birom
-  module Move
+  module Counter
 
     attr_accessor :triangles
 
