@@ -157,22 +157,6 @@ module Birom
       end
     end
 
-    describe '#getBoundingBox' do
-      context 'with 1 triangle' do
-        let(:t0) { Triangle.new(0, 0, 0, Triangle::TRI_TYPE_COUNTER) }
-        let(:orig) { g = Grid.new(); g.set(t0); g }
-        let(:copy) { orig.deepCopy }
-
-        it 'returns equal triangles' do
-          orig.get(0, 0, 0).should_not be(copy.get(0, 0, 0))
-        end
-
-        it 'copies triangles' do
-          orig.get(0, 0, 0).should == copy.get(0, 0, 0)
-        end
-      end
-    end
-
     describe '#fillBorderTriangles' do
       context 'with single birom' do
         let(:grid) do
