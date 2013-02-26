@@ -287,6 +287,10 @@ module Birom
       end
     end
 
+    def overlaps?(triangles)
+      ! (@triangles.values & triangles).empty?
+    end
+
     private
     def getCapturedBranch(branchRoot)
       marked = [branchRoot]

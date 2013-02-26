@@ -560,5 +560,32 @@ module Birom
         end
       end
     end
+
+    describe '#overlaps?' do
+      context 'on an empty grid' do
+        let(:grid) { Grid.new }
+
+        it 'returns false' do
+          t = Triangle.new(0, 0, 0, Triangle::TRI_TYPE_COUNTER, 99)
+          grid.overlaps?([t]).should be_false
+        end
+      end
+
+      context 'with overlapping triangles' do
+        let(:triangle) do
+          Triangle.new(6, 0, -5, Triangle::TRI_TYPE_COUNTER)
+        end
+
+        let(:grid) do
+          g = Grid.new
+          g.set triangle
+          g
+        end
+
+        it 'returns true' do
+          grid.overlaps?([triangle]).should be_true
+        end
+      end
+    end
   end
 end
