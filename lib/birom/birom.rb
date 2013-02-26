@@ -59,5 +59,13 @@ module Birom
       true
     end
 
+    RED = Birom.new(
+      [
+        { u: 0, v: 0, w: 0 },
+        { u: 0, v: 1, w: 0 },
+        { u: -1, v: 1, w: 0 },
+        { u: -1, v: 1, w: 1 }
+      ], Birom::PLAYER_ID_UNDEFINED, Triangle::TRI_TYPE_START
+    )
   end
 end
