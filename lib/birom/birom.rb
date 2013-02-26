@@ -26,13 +26,19 @@ module Birom
         Triangle.new(c[:u], c[:v], c[:w], @type, @playerId)
       end
 
+      unless valid?
+        raise Exception('Not a birom')
+      end
+    end
+
+    def valid?
       @triangles.each do |t|
         combos = [t].product(@triangles - [t])
         combos.each do |t1, t2|
           if  (t1.u - t2.u).abs > 1 or
               (t1.v - t2.v).abs > 1 or
               (t1.w - t2.w).abs > 1 then
-            raise Exception('Not a birom')
+            return false
           end
         end
 
@@ -41,15 +47,16 @@ module Birom
         end.count(true)
 
         unless (1..2).member?(close_neighbour_count_of_t)
-          raise Exception('Not a birom')
+          return false
         end
       end
 
       unless @triangles.combination(2).map do |t1, t2|
         t1.isCloseNeighbour(t2)
       end.count(true) == 3
-        raise Exception('Not a birom')
+        return false
       end
+      true
     end
 
   end
