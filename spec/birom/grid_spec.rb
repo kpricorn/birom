@@ -587,5 +587,98 @@ module Birom
         end
       end
     end
+
+    class DummyMove
+      include Move
+    end
+
+    describe '#validate!' do
+
+      context 'on empty grid' do
+        let(:triangle) do
+          Triangle.new(6, 0, -5, Triangle::TRI_TYPE_COUNTER)
+        end
+
+        let(:move) do
+          m = DummyMove.new
+          m.triangles = [triangle]
+          m
+        end
+
+        let(:grid) { Grid.new }
+
+        it 'raises MoveOverlaps' do
+          expect do
+            grid.validate!(move)
+          end.to raise_error(MoveNotConnected)
+        end
+      end
+
+      context 'with overlapping triangles' do
+        let(:triangle) do
+          Triangle.new(6, 0, -5, Triangle::TRI_TYPE_COUNTER)
+        end
+
+        let(:move) do
+          m = DummyMove.new
+          m.triangles = [triangle]
+          m
+        end
+
+        let(:grid) do
+          g = Grid.new
+          g.set triangle
+          g
+        end
+
+        it 'raises MoveOverlaps' do
+          expect do
+            grid.validate!(move)
+          end.to raise_error(MoveOverlaps)
+        end
+      end
+
+      context 'with one close neighbour' do
+        let(:move) do
+          m = DummyMove.new
+          m.triangles = [
+            Triangle.new(5, 0, -5, Triangle::TRI_TYPE_COUNTER)
+          ]
+          m
+        end
+
+        let(:grid) do
+          g = Grid.new
+          g.set Triangle.new(6, 0, -5, Triangle::TRI_TYPE_COUNTER)
+          g
+        end
+
+        it 'returns true' do
+          grid.validate!(move).should be_true
+        end
+      end
+
+      context 'with two connecting vertices' do
+        let(:move) do
+          m = DummyMove.new
+          m.triangles = [
+            Triangle.new(6, 0, -5, Triangle::TRI_TYPE_COUNTER)
+          ]
+          m
+        end
+
+        let(:grid) do
+          g = Grid.new
+          g.set Triangle.new(5, 1, -5, Triangle::TRI_TYPE_COUNTER)
+          g.set Triangle.new(5, 0, -4, Triangle::TRI_TYPE_COUNTER)
+          g
+        end
+
+        it 'returns true' do
+          grid.validate!(move).should be_true
+        end
+      end
+
+    end
   end
 end

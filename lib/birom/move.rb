@@ -1,6 +1,8 @@
 module Birom
   module Move
 
+    attr_accessor :triangles
+
     def getVertices
       vertices = []
       @triangles.each do |t|

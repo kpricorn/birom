@@ -1,10 +1,13 @@
 require 'birom/common'
 require 'birom/triangle'
+require 'birom/move'
 
 module Birom
   class BorderReached < Exception; end
   class EndOfBranch < Exception; end
   class SlotFound < Exception; end
+  class MoveOverlaps < Exception; end
+  class MoveNotConnected < Exception; end
 
   class Grid
 
@@ -285,6 +288,26 @@ module Birom
           w: t.w
         }
       end
+    end
+
+    def validate!(move)
+      unless move.is_a? Move
+        raise Exception.new("Argument is not an Move")
+      end
+
+      if overlaps? move.triangles
+        raise MoveOverlaps.new
+      end
+
+      biromNeighbours = move.triangles.map do |t|
+        getNeighbours(t)
+      end.flatten
+
+      unless move.connected? biromNeighbours
+        raise MoveNotConnected.new
+      end
+
+      true
     end
 
     def overlaps?(triangles)

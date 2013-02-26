@@ -9,8 +9,6 @@ module Birom
     PLAYER_ID_UNDEFINED = 0
     TRI_TYPE_COUNTER = 0
 
-    attr_accessor :triangles
-
     def initialize(coordinates, playerId = PLAYER_ID_UNDEFINED, type = TRI_TYPE_COUNTER)
       @playerId = playerId
       @type = type
