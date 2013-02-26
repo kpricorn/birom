@@ -93,21 +93,22 @@ module Birom
     end
 
     def getPointTriangles(currentCounter)
-      unless currentCounter.is_a? Array
-        raise Exception.new("Argument is not an array")
+      unless currentCounter.is_a? Counter
+        raise Exception.new("Argument is not a Counter")
       end
+      triangles = currentCounter.triangles
       # mark visited nodes
       marked = []
       pointTriangles = []
       # start walk with arbitrary triangle of currentCounter
-      root = currentCounter.first
+      root = triangles.first
       Common.bfs root do |t|
         # find neighbours (ENB) of t including:
         # - vacant coordinates (undefined on grid)
         # - currentCounter
         nbCoords = t.getCloseNeighbourCoords.select do |c|
           (
-            get(c[:u], c[:v], c[:w]).nil? or currentCounter.include? c
+            get(c[:u], c[:v], c[:w]).nil? or triangles.include? c
           ) and not marked.include? c
         end
         # return valid triangles (type: border)

@@ -1,5 +1,7 @@
 require 'spec_helper'
+
 require 'birom/grid'
+require 'birom/polyrom'
 require 'birom/triangle'
 
 module Birom
@@ -230,17 +232,15 @@ module Birom
 
     describe '#getPointTriangles' do
       context '0/0/0 with 3 orbiting counters' do
-        let (:t3) do
-          Triangle.new(0, 0, 1, Triangle::TRI_TYPE_COUNTER, 99)
-        end
-
         let(:points) do
           g = Grid.new
           g.set Triangle.new(1, 0, 0, Triangle::TRI_TYPE_COUNTER, 99)
           g.set Triangle.new(0, 1, 0, Triangle::TRI_TYPE_COUNTER, 99)
-          g.set t3
+          g.set Triangle.new(0, 0, 1, Triangle::TRI_TYPE_COUNTER, 99)
           g.fillBorderTriangles
-          g.getPointTriangles([t3])
+          g.getPointTriangles(Polyrom.new([{
+            u: 0, v: 0, w: 1}], 99, Triangle::TRI_TYPE_COUNTER
+          ))
         end
 
         it 'returns 0/0/0 as point triangle' do
@@ -356,7 +356,7 @@ module Birom
 
       context 'with 4 surrounded triangles' do
         let(:root) do
-          # current move player 9
+          # current Counter player 9
           Triangle.new(-2, 5, -3, Triangle::TRI_TYPE_COUNTER, 9)
         end
 
@@ -396,7 +396,7 @@ module Birom
       context 'with 4 surrounded triangles' do
 
         let(:root) do
-          # current move player 9
+          # current Counter player 9
           Triangle.new(-2, 5, -3, Triangle::TRI_TYPE_COUNTER, 9)
         end
 
@@ -438,7 +438,7 @@ module Birom
       context 'with 2 surrounded triangles' do
 
         let(:root) do
-          # current move player 9
+          # current Counter player 9
           Triangle.new(-2, 5, -3, Triangle::TRI_TYPE_COUNTER, 9)
         end
 
@@ -507,20 +507,20 @@ module Birom
       context 'on an empty grid' do
         let(:grid) { Grid.new }
 
-        it 'returns the same move coordinates' do
+        it 'returns the same counter coordinates' do
           t = Triangle.new(0, 0, 0, Triangle::TRI_TYPE_COUNTER, 99)
           grid.findSnappingSlots([t]).should be_matching_coordinates([
             {u: 0, v: 0, w: 0}])
         end
 
-        it 'returns the same move coordinates' do
+        it 'returns the same counter coordinates' do
           t = Triangle.new(1, -1, 0, Triangle::TRI_TYPE_COUNTER, 99)
           grid.findSnappingSlots([t]).should be_matching_coordinates(
             [{u: 1, v: -1, w: 0}])
         end
       end
 
-      context 'when move overlaps' do
+      context 'when counter overlaps' do
 
         let(:triangle) do
           Triangle.new(6, 0, -5, Triangle::TRI_TYPE_COUNTER)
@@ -572,8 +572,8 @@ module Birom
       end
     end
 
-    class DummyMove
-      include Move
+    class DummyCounter
+      include Counter
     end
 
     describe '#validate!' do
@@ -583,18 +583,18 @@ module Birom
           Triangle.new(6, 0, -5, Triangle::TRI_TYPE_COUNTER)
         end
 
-        let(:move) do
-          m = DummyMove.new
+        let(:counter) do
+          m = DummyCounter.new
           m.triangles = [triangle]
           m
         end
 
         let(:grid) { Grid.new }
 
-        it 'raises MoveOverlaps' do
+        it 'raises CounterOverlaps' do
           expect do
-            grid.validate!(move)
-          end.to raise_error(MoveNotConnected)
+            grid.validate!(counter)
+          end.to raise_error(CounterNotConnected)
         end
       end
 
@@ -603,8 +603,8 @@ module Birom
           Triangle.new(6, 0, -5, Triangle::TRI_TYPE_COUNTER)
         end
 
-        let(:move) do
-          m = DummyMove.new
+        let(:counter) do
+          m = DummyCounter.new
           m.triangles = [triangle]
           m
         end
@@ -615,16 +615,16 @@ module Birom
           g
         end
 
-        it 'raises MoveOverlaps' do
+        it 'raises CounterOverlaps' do
           expect do
-            grid.validate!(move)
-          end.to raise_error(MoveOverlaps)
+            grid.validate!(counter)
+          end.to raise_error(CounterOverlaps)
         end
       end
 
       context 'with one close neighbour' do
-        let(:move) do
-          m = DummyMove.new
+        let(:counter) do
+          m = DummyCounter.new
           m.triangles = [
             Triangle.new(5, 0, -5, Triangle::TRI_TYPE_COUNTER)
           ]
@@ -638,13 +638,13 @@ module Birom
         end
 
         it 'returns true' do
-          grid.validate!(move).should be_true
+          grid.validate!(counter).should be_true
         end
       end
 
       context 'with two connecting vertices' do
-        let(:move) do
-          m = DummyMove.new
+        let(:counter) do
+          m = DummyCounter.new
           m.triangles = [
             Triangle.new(6, 0, -5, Triangle::TRI_TYPE_COUNTER)
           ]
@@ -659,7 +659,7 @@ module Birom
         end
 
         it 'returns true' do
-          grid.validate!(move).should be_true
+          grid.validate!(counter).should be_true
         end
       end
 
