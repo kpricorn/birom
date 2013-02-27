@@ -3,11 +3,12 @@ require 'birom/triangle'
 require 'birom/counter'
 
 module Birom
+  class TurnException < Exception; end
   class BorderReached < Exception; end
   class EndOfBranch < Exception; end
   class SlotFound < Exception; end
-  class CounterOverlaps < Exception; end
-  class CounterNotConnected < Exception; end
+  class CounterOverlaps < TurnException; end
+  class CounterNotConnected < TurnException; end
 
   class Grid
 
