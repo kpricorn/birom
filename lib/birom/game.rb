@@ -29,7 +29,7 @@ module Birom
 
     def join(user)
       if @running
-        raise Exception('Game already running')
+        raise Exception.new('Game already running')
       end
 
       gamePlayer = GamePlayer.new
