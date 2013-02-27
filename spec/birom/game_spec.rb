@@ -107,14 +107,9 @@ module Birom
       end
 
       context 'when game is running' do
-        let(:game) { Game.new }
-        let(:player_0) { game.join(User.new) }
-        let(:player_1) { game.join(User.new) }
-
-        before do
-          player_0
-          player_1
-        end
+        let!(:game) { Game.new }
+        let!(:player_0) { game.join(User.new) }
+        let!(:player_1) { game.join(User.new) }
 
         context 'with an overlapping turn' do
           let(:overlappingBirom) do
