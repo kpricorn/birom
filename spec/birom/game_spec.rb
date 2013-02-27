@@ -52,23 +52,23 @@ module Birom
           g
         end
 
-        let(:join_player_0) { game.join(User.new) }
-        let(:join_player_1) { game.join(User.new) }
+        let(:yellow) { game.join(User.new) }
+        let(:blue) { game.join(User.new) }
 
         it 'creates a game player with id 1' do
-          join_player_0
-          join_player_1.id.should == 1
+          yellow
+          blue.id.should == 1
         end
 
         it 'assigns first turn to newly created game player' do
-          join_player_0
-          join_player_1
-          join_player_0.should == game.turn
+          yellow
+          blue
+          yellow.should == game.turn
         end
 
         it 'sets game to running' do
-          join_player_0
-          join_player_1
+          yellow
+          blue
           game.running.should == true
         end
       end
