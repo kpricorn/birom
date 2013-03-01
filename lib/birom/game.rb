@@ -49,6 +49,12 @@ module Birom
       gamePlayer
     end
 
+    def opponents(player)
+      @players.keep_if
+      @players.reject do |p|
+        p == player
+      end
+    end
     def self.getNextTurn(currentPlayer, players)
       pidx = players.index(currentPlayer)
       activePlayers =  players.rotate(pidx + 1).select do |p|
