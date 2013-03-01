@@ -49,5 +49,11 @@ module Birom
       gamePlayer
     end
 
+    def self.getNextTurn(currentPlayer, players)
+      pidx = players.index(currentPlayer)
+      activePlayers =  players.rotate(pidx + 1).select do |p|
+        p.countersLeft > 0
+      end.first
+    end
   end
 end

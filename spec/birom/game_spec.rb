@@ -25,6 +25,77 @@ module Birom
       end
     end
 
+    describe '#getNextTurn' do
+      context 'with two players with counters left' do
+        let(:p1) { GamePlayer.new }
+        let(:p2) { GamePlayer.new }
+
+        it 'returns the next player' do
+          Game.getNextTurn(p1, [p1, p2]).should == p2
+        end
+      end
+
+      context 'with two players with counters left' do
+        let(:p1) { GamePlayer.new }
+        let(:p2) { GamePlayer.new }
+        let(:p3) { GamePlayer.new }
+
+        it 'returns the next player' do
+          Game.getNextTurn(p2, [p1, p2, p3]).should == p3
+        end
+      end
+
+      context 'with two players with counters left' do
+        let(:p1) { GamePlayer.new }
+        let(:p2) { p = GamePlayer.new; p.countersLeft = 0; p }
+        let(:p3) { GamePlayer.new }
+
+        it 'returns the next player' do
+          Game.getNextTurn(p1, [p1, p2, p3]).should == p3
+        end
+      end
+
+      context 'when no players left' do
+        let(:p1) {
+          p = GamePlayer.new
+          p.countersLeft = 0
+          p
+        }
+        it 'returns nil' do
+          Game.getNextTurn(p1, [p1]).should == nil
+        end
+      end
+    end
+
+    describe '#opponents' do
+
+      class User; end
+      let(:game) { Game.new }
+
+      context 'without game players' do
+        it 'returns an empty array' do
+          game.opponents(nil).should == []
+        end
+      end
+
+      context 'with one game player' do
+        let!(:blue) { game.join(User.new) }
+
+        it 'returns an empty array' do
+          game.opponents(blue).should == []
+        end
+      end
+
+      context 'with two game players' do
+        let!(:yellow) { game.join(User.new) }
+        let!(:blue) { game.join(User.new) }
+
+        it 'returns an array containing all other players' do
+          game.opponents(blue).should == [yellow]
+        end
+      end
+    end
+
     describe '#join' do
 
       class User; end
