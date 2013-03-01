@@ -179,8 +179,8 @@ module Birom
 
       context 'when game is running' do
         let!(:game) { Game.new }
-        let!(:player_0) { game.join(User.new) }
-        let!(:player_1) { game.join(User.new) }
+        let!(:yellow) { game.join(User.new) }
+        let!(:blue) { game.join(User.new) }
 
         context 'with an overlapping turn' do
           let(:overlappingBirom) do
@@ -190,12 +190,12 @@ module Birom
                 { u: 0, v: 1, w: 0 },
                 { u: -1, v: 1, w: 0 },
                 { u: -1, v: 1, w: 1 }
-              ], player_0, Triangle::TRI_TYPE_COUNTER
+              ], yellow, Triangle::TRI_TYPE_COUNTER
             )
           end
 
           it 'raises' do
-            turn = Turn.new(player_0, overlappingBirom)
+            turn = Turn.new(yellow, overlappingBirom)
             expect { game.take(turn) }.to raise_error(CounterOverlaps)
           end
         end
@@ -208,12 +208,12 @@ module Birom
                 { u: 0, v: 1, w: 0 },
                 { u: -1, v: 1, w: 0 },
                 { u: -1, v: 1, w: 1 }
-              ], player_0, Triangle::TRI_TYPE_COUNTER
+              ], yellow, Triangle::TRI_TYPE_COUNTER
             )
           end
 
           it 'raises' do
-            turn = Turn.new(player_0, overlappingBirom)
+            turn = Turn.new(yellow, overlappingBirom)
             expect { game.take(turn) }.to raise_error(CounterOverlaps)
           end
         end
