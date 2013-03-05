@@ -69,7 +69,7 @@ module Birom
         it'should pass Figure 1' do
           game.take(Turn.new(yellow, Birom.new( [ { u: -1,  v: 2, w: 0 }, { u: -2,  v: 2, w: 0 }, { u: -2, v: 2, w: 1 }, { u: -2, v: 1, w: 1 } ], yellow)))
           game.take(Turn.new(blue, Birom.new( [ { u: -1,  v: 0, w: 1 }, { u: -1,  v: 0, w: 2 }, { u: -2, v: 0, w: 2 }, { u: -2, v: 1, w: 2 } ], blue)))
-          # 1 point))
+          # 1 point
           game.take(Turn.new(yellow, Birom.new( [ { u: 1,  v: 0, w: 0 }, { u: 1,  v: -1, w: 0 }, { u: 1, v: -1, w: 1 }, { u: 0, v: -1, w: 1 } ], yellow)))
           game.take(Turn.new(blue, Birom.new( [ { u: 1,  v: -2, w: 1 }, { u: 1,  v: -2, w: 2 }, { u: 0, v: -2, w: 2 }, { u: 0, v: -1, w: 2 } ], blue)))
           game.take(Turn.new(yellow, Birom.new( [ { u: -3,  v: 1, w: 2 }, { u: -3,  v: 1, w: 3 }, { u: -3, v: 0, w: 3 }, { u: -2, v: 0, w: 3 } ], yellow)))
@@ -80,15 +80,15 @@ module Birom
           game.take(Turn.new(blue, Birom.new( [ { u: 0, v: 3, w: -2 }, { u: -1, v: 3, w: -2 }, { u: -1, v: 3, w: -1 }, { u: -1, v: 2, w: -1 } ], blue)))
           game.take(Turn.new(yellow, Birom.new( [ { u: 0, v: -3, w: 3 }, { u: 0, v: -3, w: 4 }, { u: -1, v: -3, w: 4 }, { u: -1, v: -2, w: 4 } ], yellow)))
           game.take(Turn.new(blue, Birom.new( [ { u: -4, v: 4, w: 0 }, { u: -4, v: 4, w: 1 }, { u: -4, v: 3, w: 1 }, { u: -3, v: 3, w: 1 } ], blue)))
-          # 2 points))
+          # 2 points
           game.take(Turn.new(yellow, Birom.new( [ { u: -3, v: 4, w: -1 }, { u: -2, v: 4, w: -1 }, { u: -2, v: 3, w: -1 }, { u: -2, v: 3, w: 0 } ], yellow)))
-          # 1 point))
+          # 1 point
           game.take(Turn.new(blue, Birom.new( [ { u: -2, v: -2, w: 4 }, { u: -2, v: -1, w: 4 }, { u: -3, v: -1, w: 4 }, { u: -3, v: -1, w: 5 } ], blue)))
           game.take(Turn.new(yellow, Birom.new( [ { u: -1, v: 4, w: -3 }, { u: -1, v: 4, w: -2 }, { u: -2, v: 4, w: -2 }, { u: -2, v: 5, w: -2 } ], yellow)))
           game.take(Turn.new(blue, Birom.new( [ { u: 1, v: 3, w: -4 }, { u: 1, v: 3, w: -3 }, { u: 0, v: 3, w: -3 }, { u: 0, v: 4, w: -3 } ], blue)))
           game.take(Turn.new(yellow, Birom.new( [ { u: 3, v: -3, w: 0 }, { u: 3, v: -2, w: 0 }, { u: 2, v: -2, w: 0 }, { u: 2, v: -2, w: 1 } ], yellow)))
-          # 2 point))
-          # 4 captured))
+          # 2 point
+          # 4 captured
           game.take(Turn.new(blue, Birom.new( [ { u: 1, v: 2, w: -3 }, { u: 2, v: 2, w: -3 }, { u: 2, v: 1, w: -3 }, { u: 2, v: 1, w: -2 } ], blue)))
           game.take(Turn.new(yellow, Birom.new( [ { u: -2, v: -3, w: 5 }, { u: -2, v: -2, w: 5 }, { u: -3, v: -2, w: 5 }, { u: -3, v: -2, w: 6 } ], yellow)))
           game.take(Turn.new(blue, Birom.new( [ { u: 1, v: -3, w: 2 }, { u: 1, v: -3, w: 3 }, { u: 1, v: -4, w: 3 }, { u: 2, v: -4, w: 3 } ], blue)))
@@ -136,7 +136,6 @@ module Birom
           game.take(Turn.new(yellow, Birom.new( [ { u: -3,  v: 2, w: 1 }, { u: -3,  v: 2, w: 2 }, { u: -3,  v: 1, w: 2 }, { u: -2,  v: 1, w: 2 } ], yellow)))
           game.take(Turn.new(blue, Birom.new( [ { u: 0,  v: 2, w: -1 }, { u: 0,  v: 2, w: -2 }, { u: 1,  v: 2, w: -2 }, { u: 1,  v: 1, w: -2 } ], blue)))
           game.winners.should == [blue]
-
         end
 
         it 'Figure 2: yellow encircles the central counter via common ground' do
