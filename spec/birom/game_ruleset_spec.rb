@@ -103,7 +103,7 @@ module Birom
           [ [0, -1, 1], [1, -1, 1], [1, -1, 0], [1, 0, 0], [1, 1, -1], [0, 1, -1], [0, 2, -1], [0, 2, -2] ].each do |commonGroundCoords|
             commonGround = game.grid.get(*commonGroundCoords)
             commonGround.type.should == Triangle::TRI_TYPE_COMMON
-            commonGround.player.should be_undefined
+            commonGround.player.should be_nil
           end
           # blue: 10 points - yellow: 9 points
           yellowPoints = game.grid.triangles.values.select do |t|
