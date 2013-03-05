@@ -118,7 +118,7 @@ module Birom
           nb = get(c[:u], c[:v], c[:w])
           if nb.nil?
             nb = Triangle.new(c[:u], c[:v], c[:w],
-                              Triangle::TRI_TYPE_POINT, root.playerId)
+                              Triangle::TRI_TYPE_POINT, root.player)
             pointTriangles << nb
           end
           nb
@@ -181,14 +181,14 @@ module Birom
       Common.bfs root do |t|
         # find neighbours (ENB) of t including:
         # - currentCounter
-        # - point triangles with same playerId
+        # - point triangles with same player
         cNbs = getCloseNeighbours(t)
         nbs = []
         cNbs.each do |c|
           if (
             (
               c.type == Triangle::TRI_TYPE_POINT and
-              c.playerId == root.playerId
+              c.player == root.player
             ) or currentCounter.include? c
           ) and not marked.include? c
             # mark as visited
@@ -321,7 +321,7 @@ module Birom
             end
             if (
               c.type == Triangle::TRI_TYPE_COUNTER and
-              c.playerId == t.playerId
+              c.player == t.player
             ) and not marked.include? c
               validNbs << c
               marked << c
