@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+require 'birom/game_player'
 require 'birom/grid'
 require 'birom/polyrom'
 require 'birom/triangle'
@@ -245,7 +246,7 @@ module Birom
 
         it 'returns 0/0/0 as point triangle' do
           points.should == [Triangle.new(0, 0, 0)]
-          points[0].playerId.should == 99
+          points[0].player.should == 99
           points[0].type.should == Triangle::TRI_TYPE_POINT
         end
       end
@@ -254,24 +255,26 @@ module Birom
     describe '#isEncircledBy' do
 
       let(:red) { Triangle.new 0, 0, 0, Triangle::TRI_TYPE_START }
+      let(:yellow) { GamePlayer.new }
+      let(:blue) { GamePlayer.new }
 
-      context 'when red birom is surrounded by 99' do
+      context 'when red birom is surrounded by blue' do
         let(:grid) do
           g = Grid.new
           g.set red
-          g.set Triangle.new 1, 0, 0, Triangle::TRI_TYPE_COUNTER, 99
-          g.set Triangle.new 0, 1, 0, Triangle::TRI_TYPE_COUNTER, 99
-          g.set Triangle.new 0, 0, 1, Triangle::TRI_TYPE_COUNTER, 99
+          g.set Triangle.new 1, 0, 0, Triangle::TRI_TYPE_COUNTER, blue
+          g.set Triangle.new 0, 1, 0, Triangle::TRI_TYPE_COUNTER, blue
+          g.set Triangle.new 0, 0, 1, Triangle::TRI_TYPE_COUNTER, blue
           g.fillBorderTriangles()
           g
         end
 
-        it 'returns false for 11' do
-          grid.isEncircledBy(red, 11).should be_false
+        it 'returns false for yellow' do
+          grid.isEncircledBy(red, yellow).should be_false
         end
 
-        it 'returns true for 99' do
-          grid.isEncircledBy(red, 99).should be_true
+        it 'returns true for blue' do
+          grid.isEncircledBy(red, blue).should be_true
         end
       end
 
@@ -279,18 +282,18 @@ module Birom
         let(:grid) do
           g = Grid.new
           g.set red
-          g.set Triangle.new 0, 1, 0, Triangle::TRI_TYPE_COUNTER, 11
-          g.set Triangle.new 0, 0, 1, Triangle::TRI_TYPE_COUNTER, 99
+          g.set Triangle.new 0, 1, 0, Triangle::TRI_TYPE_COUNTER, yellow
+          g.set Triangle.new 0, 0, 1, Triangle::TRI_TYPE_COUNTER, blue
           g.fillBorderTriangles()
           g
         end
 
-        it 'returns false for 11' do
-          grid.isEncircledBy(red, 11).should be_false
+        it 'returns false for yellow' do
+          grid.isEncircledBy(red, yellow).should be_false
         end
 
-        it 'returns false for 99' do
-          grid.isEncircledBy(red, 99).should be_false
+        it 'returns false for blue' do
+          grid.isEncircledBy(red, blue).should be_false
         end
       end
 
@@ -300,28 +303,28 @@ module Birom
           g = Grid.new
           g.set red
 
-          g.set Triangle.new(7, -1, -6, Triangle::TRI_TYPE_COUNTER, 99)
-          g.set Triangle.new(7, -2, -5, Triangle::TRI_TYPE_COUNTER, 11)
-          g.set Triangle.new(7, -1, -5, Triangle::TRI_TYPE_POINT, 11)
+          g.set Triangle.new(7, -1, -6, Triangle::TRI_TYPE_COUNTER, blue)
+          g.set Triangle.new(7, -2, -5, Triangle::TRI_TYPE_COUNTER, yellow)
+          g.set Triangle.new(7, -1, -5, Triangle::TRI_TYPE_POINT, yellow)
 
-          g.set Triangle.new(5, 0, -5, Triangle::TRI_TYPE_COUNTER, 99)
-          g.set Triangle.new(6, 0, -6, Triangle::TRI_TYPE_COUNTER, 11)
-          g.set Triangle.new(6, 0, -5, Triangle::TRI_TYPE_POINT, 11)
+          g.set Triangle.new(5, 0, -5, Triangle::TRI_TYPE_COUNTER, blue)
+          g.set Triangle.new(6, 0, -6, Triangle::TRI_TYPE_COUNTER, yellow)
+          g.set Triangle.new(6, 0, -5, Triangle::TRI_TYPE_POINT, yellow)
 
-          g.set Triangle.new(5, -1, -4, Triangle::TRI_TYPE_COUNTER, 99)
-          g.set Triangle.new(6, -2, -4, Triangle::TRI_TYPE_COUNTER, 11)
-          g.set Triangle.new(6, -1, -4, Triangle::TRI_TYPE_POINT, 11)
+          g.set Triangle.new(5, -1, -4, Triangle::TRI_TYPE_COUNTER, blue)
+          g.set Triangle.new(6, -2, -4, Triangle::TRI_TYPE_COUNTER, yellow)
+          g.set Triangle.new(6, -1, -4, Triangle::TRI_TYPE_POINT, yellow)
 
           g.fillBorderTriangles()
           g
         end
 
-        it 'returns true for 11' do
-          grid.isEncircledBy(red, 11).should be_true
+        it 'returns true for yellow' do
+          grid.isEncircledBy(red, yellow).should be_true
         end
 
-        it 'returns true for 99' do
-          grid.isEncircledBy(red, 99).should be_true
+        it 'returns true for blue' do
+          grid.isEncircledBy(red, blue).should be_true
         end
       end
     end
