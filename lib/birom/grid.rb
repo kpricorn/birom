@@ -128,28 +128,31 @@ module Birom
       pointTriangles
     end
 
-    def isEncircledBy(redBiromTriangle, playerId)
-      marked = []
-      unless redBiromTriangle.type == Triangle::TRI_TYPE_START
+    def isEncircledBy(triangle, player)
+      unless triangle.type == Triangle::TRI_TYPE_START
         raise Exception.new("Argument is not a red birom triangle")
       end
-      encircled = true
 
+      encircled = true
+      marked = [triangle]
       begin
-        Common.bfs redBiromTriangle do |t|
+        Common.bfs triangle do |t|
           neighbours = []
-          getCloseNeighbours(t).each do |c|
-            if c.type == Triangle::TRI_TYPE_BORDER
+          getCloseNeighbours(t).each do |cnt|
+            if cnt.type == Triangle::TRI_TYPE_BORDER
               raise BorderReached.new
             end
-            if c.type == Triangle::TRI_TYPE_START or
-              (
-                c.type == Triangle::TRI_TYPE_COUNTER and
-                c.playerId.to_i != playerId.to_i
-              )and not marked.include? c
-              neighbours << c
+
+            isRed = cnt.type == Triangle::TRI_TYPE_START
+            isCounter = cnt.type == Triangle::TRI_TYPE_COUNTER
+            isOpponent = cnt.player != player
+            isOpponentCounter = isCounter && isOpponent
+            isMarked = marked.include? cnt
+
+            if (isRed or isOpponentCounter) and not isMarked
+              neighbours << cnt
             end
-            marked << c
+            marked << cnt
           end
           neighbours
         end
