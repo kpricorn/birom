@@ -6,7 +6,7 @@ module Birom
     attr_accessor :v
     attr_accessor :w
     attr_accessor :type
-    attr_accessor :playerId
+    attr_accessor :player
 
     TRI_TYPE_UNDEFINED = -1
     TRI_TYPE_START = 0
@@ -17,7 +17,7 @@ module Birom
 
     PLAYER_ID_UNDEFINED = 0
 
-    def initialize(u, v, w, type = TRI_TYPE_UNDEFINED, playerId = PLAYER_ID_UNDEFINED)
+    def initialize(u, v, w, type = TRI_TYPE_UNDEFINED, player = PLAYER_ID_UNDEFINED)
       unless ([u, v, w].all? {|c| c.is_a? Integer }) then
         raise Exception.new('Invalid or missing coordinates')
       end
@@ -30,7 +30,7 @@ module Birom
       @v = v
       @w = w
       @type = type
-      @playerId = playerId
+      @player = player
 
     end
 
