@@ -36,7 +36,7 @@ module Birom
           [[-1, 0, 1], [-1, 0, 2], [-1, -1, 2]].each do |pointCoords|
             point = game.grid.get(*pointCoords)
             point.type.should == Triangle::TRI_TYPE_POINT
-            point.playerId.should == yellow
+            point.player.should == yellow
           end
         end
 
