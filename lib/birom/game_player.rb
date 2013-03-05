@@ -1,6 +1,6 @@
 module Birom
-  class GamePlayer
 
+  class GamePlayer
     attr_accessor :id
     attr_accessor :points
     attr_accessor :countersLeft
@@ -10,6 +10,9 @@ module Birom
       @points = 0
       @countersLeft = 15
     end
-
   end
+
+  class UndefinedPlayer < GamePlayer
+  end
+
 end
