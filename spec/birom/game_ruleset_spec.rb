@@ -108,10 +108,10 @@ module Birom
           # blue: 10 points - yellow: 9 points
           yellowPoints = game.grid.triangles.values.select do |t|
             t.type == Triangle::TRI_TYPE_POINT && t.player == yellow
-          end.reduce(:+)
+          end.count
           bluePoints = game.grid.triangles.values.select do |t|
             t.type == Triangle::TRI_TYPE_POINT && t.player == blue
-          end.reduce(:+)
+          end.count
 
           yellowPoints.should == 9
           bluePoints.should == 10
