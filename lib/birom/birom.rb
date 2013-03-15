@@ -1,7 +1,3 @@
-require 'birom/triangle'
-require 'birom/game_player'
-require 'birom/counter'
-
 module Birom
 
   class Birom

@@ -1,6 +1,3 @@
-require 'birom/grid'
-require 'birom/triangle'
-
 module Birom
   class GridUtils
     def self.copyGrid(grid)

@@ -1,9 +1,3 @@
-require 'birom/birom'
-require 'birom/turn'
-require 'birom/grid'
-require 'birom/grid_utils'
-require 'birom/game_player'
-
 module Birom
   class TurnUndefined; end
   class Game

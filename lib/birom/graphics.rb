@@ -1,5 +1,3 @@
-require 'birom/common'
-
 module Birom
   class Graphics
 

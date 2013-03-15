@@ -1,6 +1,3 @@
-require 'birom/triangle'
-require 'birom/counter'
-
 module Birom
 
   class Polyrom
