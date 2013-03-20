@@ -8,28 +8,28 @@ module Birom
     describe '#vector_to_triangles' do
       it 'converts 0/0 and 0' do
         CoordUtils.vector_to_triangles(0, 0, 0).should == [
-          [1, 0, -1],
-          [1, 1, -1],
-          [0, 1, -1],
-          [0, 1,  0],
+          {u: 1, v: 0, w: -1},
+          {u: 1, v: 1, w: -1},
+          {u: 0, v: 1, w: -1},
+          {u: 0, v: 1, w:  0},
         ]
       end
 
       it 'converts 0/0 and 120' do
         CoordUtils.vector_to_triangles(0, 0, 120).should == [
-          [0, 1, -1],
-          [0, 1,  0],
-          [0, 0,  0],
-          [1, 0,  0],
+          {u: 0, v: 1, w: -1},
+          {u: 0, v: 1, w:  0},
+          {u: 0, v: 0, w:  0},
+          {u: 1, v: 0, w:  0},
         ]
       end
 
       it 'converts -4/2 and 300' do
         CoordUtils.vector_to_triangles(-4, 2, 300).should == [
-          [-3, 2, 2],
-          [-3, 2, 1],
-          [-3, 3, 1],
-          [-4, 3, 1],
+          {u: -3, v: 2, w: 2},
+          {u: -3, v: 2, w: 1},
+          {u: -3, v: 3, w: 1},
+          {u: -4, v: 3, w: 1},
         ]
       end
     end

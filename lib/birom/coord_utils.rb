@@ -23,6 +23,8 @@ module Birom
       steps = orientation / 60 % 6 - 2
       projection.rotate(steps)[0...4].map do |p|
         [coords, p].transpose.map {|x| x.reduce(:+)}
+      end.map do |t|
+        { u: t[0], v: t[1], w: t[2] }
       end
     end
   end

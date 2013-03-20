@@ -5,7 +5,7 @@ module Birom
 
     def getVertices
       vertices = []
-      @triangles.each do |t|
+      triangles.each do |t|
         t.getVertices.each do |v|
           unless vertices.any? { |_v| v[:x] == _v[:x] and v[:y] == _v[:y] }
             vertices << v

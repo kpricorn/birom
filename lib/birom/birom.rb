@@ -1,13 +1,54 @@
 module Birom
 
+  module BiromCommon
+    attr_accessor :turn
+  end
+
+  class VectorBirom
+
+    attr_accessor :u
+    attr_accessor :v
+    attr_accessor :rotation
+
+    include Counter
+    include BiromCommon
+
+    def initialize(u, v, rotation, turn = nil)
+
+      unless u.is_a? Numeric or v.is_a? Numeric or rotation.is_a? Numeric
+        raise Exception.new('Arguments u, v and rotation need to be numbers')
+      end
+
+      unless turn.nil? and not turn.is_a? Turn
+        raise Exception.new('Arguments turn needs to be instance of Turn')
+      end
+
+      @u = u
+      @v = v
+      @rotation = rotation
+      @turn = turn
+    end
+
+    def triangles
+      CoordUtils.vector_to_triangles(u, v, rotation).map do |tCords|
+        Triangle.new(
+          tCords[:u],
+          tCords[:v],
+          tCords[:w]
+        )
+      end
+    end
+  end
+
   class Birom
 
     include Counter
 
     PLAYER_ID_UNDEFINED = UndefinedPlayer.new
 
-    def self.new_from_uv_and_orientation
-
+    def self.new_from_uv_and_rotation(u, v, rotation, *args)
+      triangles = CoordUtils.vector_to_triangles(u, v, rotation)
+      Birom.new(triangles, *args)
     end
 
     def initialize(coordinates,

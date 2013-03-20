@@ -2,6 +2,29 @@ require 'spec_helper'
 require 'birom/birom'
 
 module Birom
+  describe VectorBirom do
+    describe '#initialize' do
+
+      context 'with invalid arguments' do
+        it 'raises' do
+          expect{VectorBirom.new('a', 'b', 'c')}.to raise_error(/need to be numbers/)
+        end
+      end
+    end
+
+    describe '#triangles' do
+      it 'converts u, v and rotation to triangles hash' do
+        VectorBirom.new(0, 0, 180).triangles.should == [
+          Triangle.new(0, 1,  0),
+          Triangle.new(0, 0,  0),
+          Triangle.new(1, 0,  0),
+          Triangle.new(1, 0, -1),
+        ]
+      end
+
+    end
+  end
+
   describe Birom do
     describe '#initialize' do
 
@@ -107,5 +130,26 @@ module Birom
 
     end
 
+    describe '#new_from_uv_and_rotation' do
+      it 'creates birom with triangles' do
+        triangles = Birom.new_from_uv_and_rotation(0, 0, 0).triangles
+        triangles.should == [
+          Triangle.new(1, 0, -1),
+          Triangle.new(1, 1, -1),
+          Triangle.new(0, 1, -1),
+          Triangle.new(0, 1,  0),
+        ]
+      end
+
+      it 'creates birom with triangles' do
+        triangles = Birom.new_from_uv_and_rotation(0, 0, 180).triangles
+        triangles.should == [
+          Triangle.new(0, 1,  0),
+          Triangle.new(0, 0,  0),
+          Triangle.new(1, 0,  0),
+          Triangle.new(1, 0, -1),
+        ]
+      end
+    end
   end
 end
