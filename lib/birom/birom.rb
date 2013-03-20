@@ -6,17 +6,21 @@ module Birom
 
     PLAYER_ID_UNDEFINED = UndefinedPlayer.new
 
+    def self.new_from_uv_and_orientation
+
+    end
+
     def initialize(coordinates,
                    player = PLAYER_ID_UNDEFINED,
                    type = Triangle::TRI_TYPE_COUNTER)
       @player = player
       @type = type
 
-      unless coordinates.is_a? Array then
+      unless coordinates.is_a? Array
         raise Exception.new('Coordinates is not an array')
       end
 
-      if coordinates.length != 4 then
+      if coordinates.length != 4
         raise Exception.new('Number of coordinates does not match')
       end
 
@@ -35,7 +39,7 @@ module Birom
         combos.each do |t1, t2|
           if  (t1.u - t2.u).abs > 1 or
               (t1.v - t2.v).abs > 1 or
-              (t1.w - t2.w).abs > 1 then
+              (t1.w - t2.w).abs > 1
             return false
           end
         end
